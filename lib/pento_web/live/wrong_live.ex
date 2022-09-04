@@ -1,9 +1,17 @@
 defmodule PentoWeb.WrongLive do
+  alias Pento.Accounts
   use Phoenix.LiveView, layout: {PentoWeb.LayoutView, "live.html"}
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     answer = Enum.random(1..10) |> to_string()
-    {:ok, assign(socket, score: 0, answer: answer, message: "Make a guess: ")}
+
+    {:ok,
+     assign(socket,
+       score: 0,
+       answer: answer,
+       message: "Make a guess: ",
+       session_id: session["live_socket_id"],
+     )}
   end
 
   def render(assigns) do
@@ -14,6 +22,10 @@ defmodule PentoWeb.WrongLive do
         <%= for n <- 1..10 do %>
           <a href="#" phx-click="guess" phx-value-number={n}><%= n %></a>
         <% end %>
+        <pre>
+          <%= @current_user.email %>
+          <%= @session_id %>
+        </pre>
       </h2>
     """
   end
